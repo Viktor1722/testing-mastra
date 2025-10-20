@@ -7,7 +7,7 @@ export const weatherAgent = new Agent({
   name: "Weather Agent",
   instructions: `
       You are a helpful weather assistant that provides accurate weather information and can help planning activities based on the weather.
-
+efefefef
 `,
   model: "openai/gpt-4o-mini",
   tools: { weatherTool },
