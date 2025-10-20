@@ -7,7 +7,7 @@ import { VercelDeployer } from "@mastra/deployer-vercel";
 
 export const mastra = new Mastra({
   deployer: new VercelDeployer({
-    maxDuration: 600,
+    maxDuration: 100,
     memory: 1536,
     regions: ["cdg1"],
   }),
