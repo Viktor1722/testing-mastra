@@ -14,8 +14,6 @@ import 'module';
 import 'os';
 import './tools.mjs';
 import 'events';
-import 'pino';
-import 'pino-pretty';
 
 var anthropicErrorDataSchema = z.object({
   type: z.literal("error"),

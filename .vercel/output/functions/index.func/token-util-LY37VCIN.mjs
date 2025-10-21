@@ -8,8 +8,6 @@ import 'module';
 import 'os';
 import 'path';
 import 'events';
-import 'pino';
-import 'pino-pretty';
 import 'fs/promises';
 import 'path/posix';
 import 'stream';

@@ -1,9 +1,11 @@
 {
   "handler": "index.mjs",
   "launcherType": "Nodejs",
-  "runtime": "nodejs20.x",
+  "runtime": "nodejs24.x",
   "shouldAddHelpers": true,
   "maxDuration": 100,
   "memory": 1536,
-  "regions": ["cdg1"]
+  "regions": [
+    "cdg1"
+  ]
 }

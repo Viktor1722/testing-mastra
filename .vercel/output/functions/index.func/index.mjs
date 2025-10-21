@@ -14,5 +14,3 @@ import 'child_process';
 import 'module';
 import 'os';
 import 'events';
-import 'pino';
-import 'pino-pretty';

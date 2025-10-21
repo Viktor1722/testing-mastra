@@ -5,8 +5,6 @@ import { createRequire } from 'module';
 import os from 'os';
 import path from 'path';
 import EventEmitter$1, { EventEmitter } from 'events';
-import pino from 'pino';
-import pretty from 'pino-pretty';
 
 
 // -- Shims --
@@ -327,6 +325,10 @@ function isVercelTool(tool) {
   return !!(tool && !(tool instanceof Tool) && "parameters" in tool);
 }
 
+function getDefaultExportFromCjs (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
 // src/logger/constants.ts
 var RegisteredLogger = {
   AGENT: "AGENT",
@@ -419,10 +421,6 @@ var ConsoleLogger = class extends MastraLogger {
     return { logs: [], total: 0, page: _args.page ?? 1, perPage: _args.perPage ?? 100, hasMore: false };
   }
 };
-
-function getDefaultExportFromCjs (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
 
 // src/base.ts
 var MastraBase = class {
@@ -59349,55 +59347,6 @@ Mastra = /*@__PURE__*/(_ => {
   return Mastra;
 })();
 
-// src/pino.ts
-var PinoLogger = class extends MastraLogger {
-  logger;
-  constructor(options = {}) {
-    super(options);
-    let prettyStream = void 0;
-    if (!options.overrideDefaultTransports) {
-      prettyStream = pretty({
-        colorize: true,
-        levelFirst: true,
-        ignore: "pid,hostname",
-        colorizeObjects: true,
-        translateTime: "SYS:standard",
-        singleLine: false
-      });
-    }
-    const transportsAry = [...this.getTransports().entries()];
-    this.logger = pino(
-      {
-        name: options.name || "app",
-        level: options.level || LogLevel.INFO,
-        formatters: options.formatters
-      },
-      options.overrideDefaultTransports ? options?.transports?.default : transportsAry.length === 0 ? prettyStream : pino.multistream([
-        ...transportsAry.map(([, transport]) => ({
-          stream: transport,
-          level: options.level || LogLevel.INFO
-        })),
-        {
-          stream: prettyStream,
-          level: options.level || LogLevel.INFO
-        }
-      ])
-    );
-  }
-  debug(message, args = {}) {
-    this.logger.debug(args, message);
-  }
-  info(message, args = {}) {
-    this.logger.info(args, message);
-  }
-  warn(message, args = {}) {
-    this.logger.warn(args, message);
-  }
-  error(message, args = {}) {
-    this.logger.error(args, message);
-  }
-};
-
 const forecastSchema = z.object({
   date: z.string(),
   maxTemp: z.number(),
@@ -66160,16 +66109,10 @@ const mastra = new Mastra({
   agents: {
     weatherAgent
   },
-  logger: new PinoLogger({
-    name: "Mastra",
-    level: "info"
-  }),
   telemetry: {
-    // Telemetry is deprecated and will be removed in the Nov 4th release
     enabled: false
   },
   observability: {
-    // Enables DefaultExporter and CloudExporter for AI tracing
     default: {
       enabled: true
     }
